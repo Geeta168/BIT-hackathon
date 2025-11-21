@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Routes, Route } from 'react-router-dom'
 import Tesseract from 'tesseract.js'
 import Home from './pages/Home'
@@ -34,6 +35,23 @@ function App() {
       <Route path="/specialty/:name" element={<SpecialtyDoctors />} />
     </Routes>
   )
+=======
+import Home from "./pages/Home";
+import Dashboard from "./components/Dashboard";
+import { BrowserRouter as Router, Routes , Route  } from "react-router-dom";
+
+function App() {
+  return (
+    <>
+    <Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+      </Router>
+    </>
+  );
+>>>>>>> 35e4b12556fd10dd4d81249a8cb4bcf6d773172e
 }
 
 export default App
