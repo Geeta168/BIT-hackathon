@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Authform from "./components/authform.jsx";
 import Dashboard from "./components/Dashboard.jsx";
@@ -14,6 +15,15 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
+=======
+import Home from "./pages/Home";
+
+function App() {
+  return (
+    <>
+      <Home />
+    </>
+>>>>>>> 988ddaab1a9873fa30280ea367ccde96efd8c73b
   );
 }
 
