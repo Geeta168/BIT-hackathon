@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 
 export default function Authform(){
-    const { t, i18n } = useTranslation();
+    
     const[isLogin,setIsLogin]=useState(true);
 
     const [email,setEmail]=useState("");
@@ -49,11 +49,7 @@ export default function Authform(){
 
     return (
         <>
-        <div className="lang-switch">
-  <button onClick={() => i18n.changeLanguage("en")}>EN</button>
-  <button onClick={() => i18n.changeLanguage("fr")}>FR</button>
-  <button onClick={() => i18n.changeLanguage("hi")}>HI</button>
-</div>
+        
         
 
         <div className='container'>

@@ -7,12 +7,6 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 
-// log incoming requests for easier debugging
-app.use((req, res, next) => {
-    console.log(new Date().toISOString(), req.method, req.url);
-    next();
-});
-
 //connect to mongodb
 
 mongoose.connect(process.env.MONGO_URL)
@@ -62,3 +56,14 @@ app.post("/login",async(req,res)=>{
         res.json({error:err.message});
     }
 });
+
+app.post("/logout",async(req,res)=>{
+    //logout logic here
+
+   try {
+    res.json({message: "logout successful"});
+   }catch(err){
+    res.json({error: err.message});
+   }
+   
+})
