@@ -1,4 +1,4 @@
-
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Tesseract from 'tesseract.js'
 import Home from './pages/Home'

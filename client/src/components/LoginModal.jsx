@@ -1,63 +1,79 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginModal({ isOpen, close, openSignup, postLoginRedirect, onLoginSuccess }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleLogin = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await fetch("http://localhost:4000/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json().catch(() => ({}));
 
-            setLoading(true);
-            try {
-                const res = await fetch('http://localhost:4000/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                if (1) {
-                    // successful login -> mark logged in and call onLoginSuccess (to show role selection) or fallback to redirect
-                    try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
-                    close();
-                    if (typeof onLoginSuccess === 'function') {
-                        try { onLoginSuccess(); } catch (e) { console.error(e); }
-                    } else {
-                        const dest = postLoginRedirect || '/patient';
-                        navigate(dest);
-                    }
+            if (1) {
+                try { localStorage.setItem("isLoggedIn", "true"); } catch (err) {}
+                close();
+                if (typeof onLoginSuccess === "function") {
+                    try { onLoginSuccess(); } catch (err) { console.error(err); }
                 } else {
-                    // parse error message if present
-                    let msg = 'Login failed';
-                    try {
-                        const j = await res.json();
-                        msg = j.message || msg;
-                    } catch (_) {}
-                    alert(msg);
+                    const dest = postLoginRedirect || "/patient";
+                    navigate(dest);
                 }
-            } catch (err) {
-                console.error('Login request error:', err);
-                alert('Network error while logging in');
-            } finally {
-                setLoading(false);
+            } else {
+                alert(data.message || "Login failed");
             }
-    }
+        } catch (err) {
+            console.error("Login request error:", err);
+            alert("Network error while logging in");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSignup = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (password !== confirmPassword) { alert("Passwords do not match"); return; }
+        setLoading(true);
+        try {
+            const res = await fetch("http://localhost:4000/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) {
+                try { localStorage.setItem("isLoggedIn", "true"); } catch (err) {}
+                close();
+                navigate(postLoginRedirect || "/dashboard");
+            } else {
+                alert(data.message || data.error || "Signup failed");
+            }
+        } catch (err) {
+            console.error("Signup request error:", err);
+            alert("Network error while signing up");
+        } finally { setLoading(false); }
+    };
 
     return (
-            <div className="modal-overlay">
-                <div className="modal-content fade-in">
-
-                {/* Heading */}
+        <div className="modal-overlay">
+            <div className="modal-content fade-in">
                 <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
-                    Login
+                    {isLogin ? "Login" : "Signup"}
                 </h2>
 
-                <form onSubmit={handleSubmit}>
-                    {/* Email */}
+                <form onSubmit={isLogin ? handleLogin : handleSignup}>
                     <input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -67,47 +83,44 @@ export default function LoginModal({ isOpen, close, openSignup, postLoginRedirec
                         required
                     />
 
-                    {/* Password */}
                     <input
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
                         placeholder="Password"
-                        className="w-full p-3 mb-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />
 
-                    {/* Login Button */}
+                    {!isLogin && (
+                        <input
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            type="password"
+                            placeholder="Confirm Password"
+                            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition"
+                        className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition mb-4"
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? (isLogin ? "Logging in..." : "Signing up...") : isLogin ? "Login" : "Signup"}
                     </button>
                 </form>
 
-                {/* Signup Link */}
                 <div className="mt-3 text-center">
-                    <span
-                        className="text-blue-600 font-medium cursor-pointer hover:underline"
-                        onClick={() => {
-                            close();
-                            openSignup();
-                        }}
-                    >
-                        Create account
+                    <span className="text-blue-600 font-medium cursor-pointer hover:underline" onClick={() => setIsLogin(!isLogin)}>
+                        {isLogin ? "Create account" : "Already have an account? Login"}
                     </span>
                 </div>
 
-                {/* Close Button */}
-                    <button
-                        onClick={close}
-                        className="w-full mt-5 bg-gray-200 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
-                    >
-                        Close
-                    </button>
-
+                <button onClick={() => { close(); if (!isLogin && typeof openSignup === "function") openSignup(); }} className="w-full mt-5 bg-gray-200 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
+                    Close
+                </button>
             </div>
         </div>
     );
