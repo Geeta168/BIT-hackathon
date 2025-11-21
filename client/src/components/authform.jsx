@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import './authform.css';
+import { useTranslation } from "react-i18next";
+
+
 
 export default function Authform(){
+    const { t, i18n } = useTranslation();
     const[isLogin,setIsLogin]=useState(true);
 
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
-
+    const navigate=useNavigate();
     //login function
     const handleLogin=async()=>{
         const res=await fetch("http://localhost:4000/login",{
@@ -15,10 +19,18 @@ export default function Authform(){
             headers:{"Content-type":"application/json"},
             body: JSON.stringify({email,password})
         });
-
+        
         const data=await res.json();
         console.log(data);
-    }
+
+        if(data.message==="login successful"){
+            return navigate("/dashboard");
+        }
+        else{
+            alert("invalid login");
+            }
+        }
+    
 
 
    //signup function
@@ -37,10 +49,18 @@ export default function Authform(){
 
     return (
         <>
+        <div className="lang-switch">
+  <button onClick={() => i18n.changeLanguage("en")}>EN</button>
+  <button onClick={() => i18n.changeLanguage("fr")}>FR</button>
+  <button onClick={() => i18n.changeLanguage("hi")}>HI</button>
+</div>
+        
+
         <div className='container'>
             <div className='form-container'>
+                
                 <div className="form-toggle">
-                    <button className={isLogin ? 'active': ""} onClick={()=>setIsLogin(true)}>Login</button>
+                    <button className={isLogin ? 'active': ""} onClick={()=>setIsLogin(true)}>{t("Login")}</button>
                     <button className={!isLogin ? 'active':""} onClick={()=>setIsLogin(false)}>Signup</button>
                 </div>
                 {isLogin ? <>

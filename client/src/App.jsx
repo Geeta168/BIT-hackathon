@@ -1,16 +1,20 @@
-import { useState } from 'react'
-import Authform from './components/authform.jsx'
-
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Authform from "./components/authform.jsx";
+import Dashboard from "./components/Dashboard.jsx";
+import "./App.css";
 
 function App() {
-
   return (
-    <>
-    
-     <Authform/>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Login / Signup page */}
+        <Route path="/" element={<Authform />} />
+
+        {/* Dashboard page */}
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
