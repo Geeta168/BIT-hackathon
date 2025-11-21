@@ -21,15 +21,15 @@ export default function LoginModal({ isOpen, close, openSignup, postLoginRedirec
                 });
 
                 if (1) {
-                                        // successful login -> mark logged in and then show role selection (or navigate)
-                                        try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
-                                        close();
-                                        if (typeof onLoginSuccess === 'function') {
-                                                try { onLoginSuccess(); } catch (e) { console.error(e); }
-                                        } else {
-                                                const dest = postLoginRedirect || '/patient';
-                                                navigate(dest);
-                                        }
+                    // successful login -> mark logged in and call onLoginSuccess (to show role selection) or fallback to redirect
+                    try { localStorage.setItem('isLoggedIn', 'true'); } catch (e) {}
+                    close();
+                    if (typeof onLoginSuccess === 'function') {
+                        try { onLoginSuccess(); } catch (e) { console.error(e); }
+                    } else {
+                        const dest = postLoginRedirect || '/patient';
+                        navigate(dest);
+                    }
                 } else {
                     // parse error message if present
                     let msg = 'Login failed';

@@ -1,3 +1,4 @@
+
 import { Routes, Route } from 'react-router-dom'
 import Tesseract from 'tesseract.js'
 import Home from './pages/Home'
@@ -34,6 +35,7 @@ function App() {
       <Route path="/specialty/:name" element={<SpecialtyDoctors />} />
     </Routes>
   )
+
 }
 
 export default App
