@@ -1,16 +1,11 @@
-import { useState } from 'react'
-import Authform from './components/authform.jsx'
-
-import './App.css'
+import Home from "./pages/Home";
 
 function App() {
-
   return (
     <>
-    
-     <Authform/>
+      <Home />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
