@@ -52,4 +52,4 @@ app.post("/api/chat", async (req, res) => {
 
 
 
-app.listen(4000, () => console.log(`http://localhost:4000`));
+app.listen(4000, () => console.log("localhost:4000 AIAssistant server started"));
