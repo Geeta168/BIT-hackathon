@@ -67,6 +67,7 @@ app.post("/logout",async(req,res)=>{
     res.json({error: err.message});
    }
    
+<<<<<<< HEAD
 })
 
 // const express=require('express');
@@ -138,3 +139,6 @@ app.post("/logout",async(req,res)=>{
 //    }
    
 // })
+=======
+})
+>>>>>>> 21bfc8e17500e38d45349fb7fe658fe686bfb231
