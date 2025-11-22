@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import './authform.css';
 
 export default function Authform(){
+    
     const[isLogin,setIsLogin]=useState(true);
 
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
+    const navigate = useNavigate();  //hook to navigate to different route
 
     //login function
     const handleLogin=async()=>{
@@ -15,9 +17,15 @@ export default function Authform(){
             headers:{"Content-type":"application/json"},
             body: JSON.stringify({email,password})
         });
-
+     
         const data=await res.json();
         console.log(data);
+
+         if (data.message === "login successful") {     
+        navigate("/dashboard");    
+    } else {
+        alert(data.message); 
+    }
     }
 
 
@@ -31,6 +39,12 @@ export default function Authform(){
 
     const data = await res.json();
     console.log(data);
+
+    if (data.message === "Signup successful") {
+        navigate("/dashboard");    
+    } else {
+        alert(data.error); 
+    }
 };
 
 
@@ -61,7 +75,14 @@ export default function Authform(){
                     <input type="text" placeholder="confirm password"/>
                     <button onClick={handleSignup}>Signup</button>
                     </div>
-                    </>}
+                    </>
+                    }
+                    
+                  {/* <div>
+                    <button onClick={()=>{navigate(/home)}}>
+                        logout
+                    </button>
+                  </div> */}
             </div>
         </div>
         </>
