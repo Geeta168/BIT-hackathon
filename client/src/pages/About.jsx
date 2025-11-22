@@ -9,6 +9,7 @@ export default function About() {
       </header>
 
       {/* CONTENT */}
+    
       <section className="max-w-3xl mx-auto px-6 py-10">
         
         <h2 className="text-2xl font-bold text-blue-900">Who We Are</h2>
