@@ -15,7 +15,7 @@ export default function LoginModal({ isOpen, close, openSignup, postLoginRedirec
         if (e && e.preventDefault) e.preventDefault();
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/api/auth/login", {
+            const res = await fetch("http://localhost:4000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -47,7 +47,7 @@ export default function LoginModal({ isOpen, close, openSignup, postLoginRedirec
         if (password !== confirmPassword) { alert("Passwords do not match"); return; }
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/api/auth/signup", {
+            const res = await fetch("http://localhost:4000/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),

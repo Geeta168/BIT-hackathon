@@ -13,7 +13,12 @@ app.use(express.json());
 const token = process.env.GITHUB_TOKEN;
 const endpoint = "https://models.github.ai/inference";
 
+// app.get("/api",(req,res)=>{
+//   res.send("Hello from AIAssistant server");
+// });
+
 app.post("/api/chat", async (req, res) => {
+  
   try {
     const userMessage = req.body.message;
 
@@ -45,4 +50,6 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+
+
+app.listen(4000, () => console.log(`http://localhost:4000`));

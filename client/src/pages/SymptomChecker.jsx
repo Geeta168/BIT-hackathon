@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 
+
+
+
 export default function SymptomChecker() {
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hi! 👋 Tell me about your symptoms, and I’ll try to help." },
+    { sender: "bot", text: "Hi! 👋 Tell me about your symptoms, and Ill try to help." },
   ]);
   const [input, setInput] = useState("");
   const chatBoxRef = useRef(null);
@@ -58,33 +61,28 @@ export default function SymptomChecker() {
   };
 
   // Bot Reply
-  const respondToSymptoms = (text) => {
-    let found = false;
+  const respondToSymptoms =async (text) => {
+    try {
+    const res = await fetch("http://localhost:4000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
 
-    for (let entry of mockDatabase) {
-      if (entry.symptoms.some((sym) => text.includes(sym))) {
-        const reply =
-          `🩺 Possible Condition: ${entry.disease}\n\n` +
-          `💊 Medicines: ${entry.medicine}\n\n` +
-          `✅ Solutions:\n- ${entry.solutions.join("\n- ")}\n\n` +
-          `👩‍⚕️ Specialist: ${entry.specialist}`;
+    const data = await res.json();
 
-        setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
-        found = true;
-        break;
-      }
-    }
+    setMessages((prev) => [
+      ...prev,
+      { sender: "bot", text: data.reply }
+    ]);
 
-    if (!found) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: "bot",
-          text: "🤔 I couldn't identify a condition. Please describe more symptoms or consult a doctor.",
-        },
-      ]);
-    }
-  };
+  } catch (error) {
+    setMessages((prev) => [
+      ...prev,
+      { sender: "bot", text: "Server error. Please try again later." }
+    ]);
+  }
+}
 
   return (
     <div
